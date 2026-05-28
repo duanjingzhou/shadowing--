@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shadowing Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Interpreter practice</p>
+          <h1>Shadowing Studio</h1>
+        </div>
+        <div class="status-pill" id="playerStatus">No video loaded</div>
+      </header>
+
+      <main class="workspace">
+        <section class="video-panel" aria-label="YouTube practice video">
+          <form class="source-form" id="videoForm">
+            <label for="youtubeUrl">YouTube URL</label>
+            <div class="source-row">
+              <input
+                id="youtubeUrl"
+                type="url"
+                placeholder="https://www.youtube.com/watch?v=..."
+                autocomplete="off"
+              />
+              <button type="submit">Load</button>
+            </div>
+          </form>
+
+          <div class="player-frame">
+            <div id="player"></div>
+            <div class="player-empty" id="playerEmpty">
+              Paste a YouTube link to begin.
+            </div>
+            <div class="player-notice hidden" id="playerNotice">
+              <strong id="playerNoticeTitle">Video cannot be embedded</strong>
+              <span id="playerNoticeText">Open it on YouTube, then use the recorder here.</span>
+              <a id="playerNoticeLink" href="#" target="_blank" rel="noreferrer">Open on YouTube</a>
+            </div>
+          </div>
+
+          <div class="transport" aria-label="Playback controls">
+            <button type="button" id="playBtn" title="Play">Play</button>
+            <button type="button" id="pauseBtn" title="Pause">Pause</button>
+            <button type="button" id="backBtn" title="Back 3 seconds">-3s</button>
+            <button type="button" id="forwardBtn" title="Forward 3 seconds">+3s</button>
+            <button type="button" id="setStartBtn">Set A</button>
+            <button type="button" id="setEndBtn">Set B</button>
+            <label class="select-label" for="speedSelect">Speed</label>
+            <select id="speedSelect">
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+            </select>
+            <label class="switch">
+              <input type="checkbox" id="loopToggle" />
+              <span>Loop A-B</span>
+            </label>
+          </div>
+
+          <div class="segment-strip">
+            <div>
+              <span>A</span>
+              <strong id="startTime">00:00.0</strong>
+            </div>
+            <div>
+              <span>B</span>
+              <strong id="endTime">00:10.0</strong>
+            </div>
+            <div>
+              <span>Length</span>
+              <strong id="segmentLength">10.0s</strong>
+            </div>
+          </div>
+
+          <div class="subtitle-panel" aria-label="YouTube subtitles">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">Subtitles</p>
+                <h2>YouTube captions</h2>
+              </div>
+              <div class="subtitle-tools">
+                <select id="subtitleLanguage" aria-label="Subtitle language">
+                  <option value="en" selected>English</option>
+                  <option value="zh">Chinese</option>
+                  <option value="">Auto</option>
+                </select>
+                <button type="button" id="loadSubtitlesBtn">Load subtitles</button>
+              </div>
+            </div>
+            <div class="subtitle-status" id="subtitleStatus">
+              Load a video, then fetch captions for sentence-by-sentence shadowing.
+            </div>
+            <div class="subtitle-list" id="subtitleList"></div>
+          </div>
+        </section>
+
+        <section class="practice-panel" aria-label="Shadowing recorder">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Current segment</p>
+              <h2 id="segmentTitle">Free practice</h2>
+            </div>
+            <button type="button" id="addSegmentBtn">Save segment</button>
+          </div>
+
+          <textarea
+            id="segmentText"
+            placeholder="Paste the line you are shadowing here. Keep it short: one sentence or one breath group."
+          ></textarea>
+
+          <div class="recording-console">
+            <div class="meter">
+              <div class="meter-fill" id="meterFill"></div>
+            </div>
+            <div class="recording-actions">
+              <button type="button" id="recordBtn" class="primary">Record</button>
+              <button type="button" id="stopBtn" disabled>Stop</button>
+              <button type="button" id="playTakeBtn" disabled>Replay take</button>
+              <a id="downloadTakeBtn" class="button-link disabled" href="#" download>Download</a>
+            </div>
+            <div class="recording-readout">
+              <span id="recordingState">Ready</span>
+              <strong id="recordingTime">00:00.0</strong>
+            </div>
+            <p class="mic-help" id="micHelp">
+              If recording is blocked, allow microphone access for localhost in the browser.
+            </p>
+          </div>
+
+          <div class="feedback-grid">
+            <label>
+              Timing target
+              <input id="timingTarget" type="text" readonly value="10.0s" />
+            </label>
+            <label>
+              Your take
+              <input id="takeDuration" type="text" readonly value="-" />
+            </label>
+            <label>
+              Difference
+              <input id="timingDelta" type="text" readonly value="-" />
+            </label>
+          </div>
+
+          <label class="notes-label" for="practiceNotes">Notes</label>
+          <textarea
+            id="practiceNotes"
+            class="notes"
+            placeholder="Rhythm, linking, stress, weak forms, breath, or Chinese-to-English interference."
+          ></textarea>
+        </section>
+
+        <section class="segments-panel" aria-label="Saved segments and takes">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Practice queue</p>
+              <h2>Segments</h2>
+            </div>
+            <button type="button" id="clearSegmentsBtn">Clear</button>
+          </div>
+
+          <div class="segments-list" id="segmentsList"></div>
+
+          <div class="takes-section">
+            <div class="panel-heading compact">
+              <h2>Takes</h2>
+              <button type="button" id="clearTakesBtn">Clear</button>
+            </div>
+            <div class="takes-list" id="takesList"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
