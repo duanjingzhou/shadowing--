@@ -778,7 +778,14 @@ els.addSegmentBtn.addEventListener("click", () => {
   saveState();
 });
 
-els.loadSubtitlesBtn.addEventListener("click", loadSubtitles);
+if (window.location.hostname.includes("github.io")) {
+  els.loadSubtitlesBtn.disabled = true;
+  setSubtitleStatus(
+    "GitHub Pages 不支持字幕 API；请直接使用 YouTube CC 字幕。"
+  );
+} else {
+  els.loadSubtitlesBtn.addEventListener("click", loadSubtitles);
+}
 els.subtitleLanguage.addEventListener("change", enablePlayerCaptions);
 
 els.recordBtn.addEventListener("click", () => {
